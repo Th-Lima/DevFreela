@@ -17,6 +17,13 @@ namespace DevFreela.Infrastucture.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            foreach (var property in modelBuilder.Model.GetEntityTypes()
+               .SelectMany(t => t.GetProperties())
+               .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?)))
+            {
+                property.SetColumnType("decimal(18,2)");
+            }
         }
     }
 }

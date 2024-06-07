@@ -60,7 +60,7 @@ namespace DevFreela.Application.Services.Implementations
         public void CreateComment(CreateCommentInputModel inputModel)
         {
             var comment = new ProjectComment(inputModel.Content, inputModel.IdProject, inputModel.IdUser);
-            _dbContext.Comments.Add(comment);
+            _dbContext.ProjectComments.Add(comment);
         }
 
         public void Update(UpdateProjectInputModel inputModel)
