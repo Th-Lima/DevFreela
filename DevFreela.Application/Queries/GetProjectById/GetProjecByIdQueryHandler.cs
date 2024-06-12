@@ -1,37 +1,21 @@
-﻿using DevFreela.Application.ViewModels;
-using DevFreela.Infrastucture.Persistence;
+﻿using DevFreela.Core.Dtos;
+using DevFreela.Core.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace DevFreela.Application.Queries.GetProjectById
 {
-    public class GetProjecByIdQueryHandler : IRequestHandler<GetProjectByIdQuery, ProjectDetailsViewModel>
+    public class GetProjecByIdQueryHandler : IRequestHandler<GetProjectByIdQuery, ProjectDetailsDto>
     {
-        private readonly DevFreelaDbContext _dbContext;
+        private readonly IProjectRepository _projectRepository;
 
-        public GetProjecByIdQueryHandler(DevFreelaDbContext dbContext)
+        public GetProjecByIdQueryHandler(IProjectRepository projectRepository)
         {
-            _dbContext = dbContext;
+            _projectRepository = projectRepository;
         }
 
-        public async Task<ProjectDetailsViewModel> Handle(GetProjectByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ProjectDetailsDto> Handle(GetProjectByIdQuery request, CancellationToken cancellationToken)
         {
-            var project = await _dbContext.Projects
-                .Include(p => p.Client)
-                .Include(p => p.Freelancer)
-                .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
-
-            var projectDetailViewModel = new ProjectDetailsViewModel(
-                project.Id,
-                project.Title,
-                project.Description,
-                project.TotalCost,
-                project.StartedAt,
-                project.FinishedAt,
-                project.Client.FullName,
-                project.Freelancer.FullName);
-
-            return projectDetailViewModel;
+            return await _projectRepository.GetByIdAsync(request.Id);
         }
     }
 }

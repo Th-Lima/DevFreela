@@ -10,7 +10,10 @@ using DevFreela.Application.Queries.GetAllSkills;
 using DevFreela.Application.Queries.GetProjectById;
 using DevFreela.Application.Queries.GetUserById;
 using DevFreela.Application.ViewModels;
+using DevFreela.Core.Dtos;
+using DevFreela.Core.Repositories;
 using DevFreela.Infrastucture.Persistence;
+using DevFreela.Infrastucture.Persistence.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -37,17 +40,22 @@ builder.Services.AddScoped<IRequestHandler<FinishProjectCommand, Unit>, FinishPr
 
 //Queries - Projects
 builder.Services.AddScoped<IRequestHandler<GetAllProjectsQuery, List<ProjectViewModel>>, GetAllProjectsQueryHandler>();
-builder.Services.AddScoped<IRequestHandler<GetProjectByIdQuery, ProjectDetailsViewModel>, GetProjecByIdQueryHandler>();
+builder.Services.AddScoped<IRequestHandler<GetProjectByIdQuery, ProjectDetailsDto>, GetProjecByIdQueryHandler>();
 
 //Commands - Users
 builder.Services.AddScoped<IRequestHandler<CreateUserCommand, int>, CreateUserCommandHandler>();
 
 //Queries - Users
-builder.Services.AddScoped<IRequestHandler<GetUserByIdQuery, UserViewModel>, GetUserByIdQueryHandler>();
+builder.Services.AddScoped<IRequestHandler<GetUserByIdQuery, UserDto>, GetUserByIdQueryHandler>();
 
 
 //Queries - Skills
-builder.Services.AddScoped<IRequestHandler<GetAllSkillsQuery, List<SkillViewModel>>, GetAllSkillsQueryHandler>();
+builder.Services.AddScoped<IRequestHandler<GetAllSkillsQuery, List<SkillDto>>, GetAllSkillsQueryHandler>();
+
+//Repositories
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<ISkillRepository, SkillRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 
 var app = builder.Build();
