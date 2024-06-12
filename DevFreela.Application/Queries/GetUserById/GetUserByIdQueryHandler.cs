@@ -13,7 +13,15 @@ namespace DevFreela.Application.Queries.GetUserById
             _userRepository = userRepository;
         }
 
-        public async Task<UserDto> Handle(GetUserByIdQuery request, CancellationToken cancellationToken) => 
-            await _userRepository.GetByIdAsync(request.Id);
+        public async Task<UserDto> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+        {
+            var user = await _userRepository.GetByIdAsync(request.Id);
+
+            return new UserDto
+            {
+                Email = user.Email,
+                FullName = user.FullName
+            };
+        }
     }
 }

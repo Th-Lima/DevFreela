@@ -1,18 +1,19 @@
-﻿using DevFreela.Infrastucture.Persistence;
+﻿using DevFreela.Core.Repositories;
 using MediatR;
 
 namespace DevFreela.Application.Commands.UpdateProject
 {
-    public class UpdateProjectCommandHandler(DevFreelaDbContext dbContext) : IRequestHandler<UpdateProjectCommand, Unit>
+    public class UpdateProjectCommandHandler(IProjectRepository projectRepository) : IRequestHandler<UpdateProjectCommand, Unit>
     {
-        private readonly DevFreelaDbContext _dbContext = dbContext;
+        private readonly IProjectRepository _projectRepository = projectRepository;
 
         public async Task<Unit> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
         {
-            var project = _dbContext.Projects.SingleOrDefault(p => p.Id == request.Id);
+            var project = await _projectRepository.GetByIdAsync(request.Id);
 
             project?.Update(request.Title, request.Description, request.TotalCost);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            await _projectRepository.SaveChangesAsync();
 
             return Unit.Value;
         }

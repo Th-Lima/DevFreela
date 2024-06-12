@@ -1,4 +1,4 @@
-﻿using DevFreela.Core.Dtos;
+﻿using DevFreela.Core.Entities;
 using DevFreela.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,15 +8,17 @@ namespace DevFreela.Infrastucture.Persistence.Repositories
     {
         private readonly DevFreelaDbContext _dbContext = dbContext;
 
-        public async Task<UserDto> GetByIdAsync(int id)
+        public async Task<User> GetByIdAsync(int id)
         {
             var user = await _dbContext.Users.SingleOrDefaultAsync(u => u.Id == id);
 
-            return new UserDto
-            {
-                Email = user.Email,
-                FullName = user.FullName
-            };
+            return user;
+        }
+
+        public async Task AddAsync(User user)
+        {
+            await _dbContext.Users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

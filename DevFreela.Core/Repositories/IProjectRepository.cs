@@ -1,11 +1,15 @@
-﻿using DevFreela.Core.Dtos;
-using DevFreela.Core.Entities;
+﻿using DevFreela.Core.Entities;
 
 namespace DevFreela.Core.Repositories
 {
     public interface IProjectRepository
     {
         Task<List<Project>> GetAllAsync();
-        Task<ProjectDetailsDto> GetByIdAsync(int id);
+        Task<Project> GetByIdAsync(int id);
+        Task AddAsync(Project project);
+        Task AddCommentAsync(ProjectComment comment);
+        Task DeleteAsync(int id);
+        Task StartAsync(Project project);
+        Task SaveChangesAsync();
     }
 }
