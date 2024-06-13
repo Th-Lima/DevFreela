@@ -9,19 +9,23 @@ using DevFreela.Application.Queries.GetAllProjects;
 using DevFreela.Application.Queries.GetAllSkills;
 using DevFreela.Application.Queries.GetProjectById;
 using DevFreela.Application.Queries.GetUserById;
+using DevFreela.Application.Validators;
 using DevFreela.Application.ViewModels;
 using DevFreela.Core.Dtos;
 using DevFreela.Core.Repositories;
 using DevFreela.Infrastucture.Persistence;
 using DevFreela.Infrastucture.Persistence.Repositories;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using DevFreela.API.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => options.Filters.Add(typeof(ValidationFilter)));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -56,6 +60,9 @@ builder.Services.AddScoped<IRequestHandler<GetAllSkillsQuery, List<SkillDto>>, G
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
 
 
 var app = builder.Build();
