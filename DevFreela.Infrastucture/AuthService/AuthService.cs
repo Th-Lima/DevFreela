@@ -35,7 +35,7 @@ namespace DevFreela.Infrastucture.AuthService
 
         public string GenerateJwtToken(string email, string role)
         {
-            var issuer = _configuration["Jwt:Issuer"];
+            var issuer = _configuration["Jwt:Issuer"] ?? throw new NullReferenceException("");
             var audience = _configuration["Jwt:Audience"];
             var key = _configuration["Jwt:Key"];
 
@@ -44,8 +44,8 @@ namespace DevFreela.Infrastucture.AuthService
 
             var claims = new List<Claim>
             {
-                new Claim("userName", email),
-                new Claim(ClaimTypes.Role, role),
+                new ("userName", email),
+                new (ClaimTypes.Role, role),
             };
 
             var token = new JwtSecurityToken(issuer: issuer,    
