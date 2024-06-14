@@ -23,6 +23,8 @@ using System.Reflection;
 using DevFreela.API.Filters;
 using DevFreela.Core.Services;
 using DevFreela.Infrastucture.AuthService;
+using DevFreela.Application.Commands.LoginUser;
+using DevFreela.API.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +52,7 @@ builder.Services.AddScoped<IRequestHandler<GetProjectByIdQuery, ProjectDetailsDt
 
 //Commands - Users
 builder.Services.AddScoped<IRequestHandler<CreateUserCommand, int>, CreateUserCommandHandler>();
+builder.Services.AddScoped<IRequestHandler<LoginUserCommand, LoginUserViewModel>, LoginUserCommandHandler>();
 
 //Queries - Users
 builder.Services.AddScoped<IRequestHandler<GetUserByIdQuery, UserDto>, GetUserByIdQueryHandler>();
@@ -69,6 +72,11 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
 
+//Swagger
+builder.Services.AddSwaggerConfiguration();
+
+//JWT
+builder.Services.AddJwtConfiguration(builder.Configuration);
 
 var app = builder.Build();
 
@@ -82,6 +90,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 
