@@ -9,11 +9,11 @@ namespace DevFreela.Application.Validators
         {
             RuleFor(p => p.Description)
                 .MaximumLength(255)
-                .WithMessage("Tamanho mmáximo de descrição é de 255 caracteres");
+                .WithMessage("Tamanho máximo de descrição é de 255 caracteres");
 
             RuleFor(p => p.Title)
                 .MaximumLength(30)
-                .WithMessage("Tamanho mmáximo de descrição é de 30 caracteres");
+                .WithMessage("Tamanho máximo de descrição é de 30 caracteres");
         }
     }
 }

@@ -21,6 +21,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using DevFreela.API.Filters;
+using DevFreela.Core.Services;
+using DevFreela.Infrastucture.AuthService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +62,9 @@ builder.Services.AddScoped<IRequestHandler<GetAllSkillsQuery, List<SkillDto>>, G
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+//Services
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
