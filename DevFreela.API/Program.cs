@@ -25,6 +25,7 @@ using DevFreela.Core.Services;
 using DevFreela.Infrastucture.AuthService;
 using DevFreela.Application.Commands.LoginUser;
 using DevFreela.API.Configuration;
+using DevFreela.Infrastucture.Payments;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,8 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DevFreelaDbContext>(options => options.UseSqlServer(connectionString));
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
 
 //Commands - Projects
@@ -44,7 +47,7 @@ builder.Services.AddScoped<IRequestHandler<CreateProjectCommentCommand, Unit>, C
 builder.Services.AddScoped<IRequestHandler<UpdateProjectCommand, Unit>, UpdateProjectCommandHandler>();
 builder.Services.AddScoped<IRequestHandler<DeleteProjectCommand, Unit>, DeleteProjectCommandHandler>();
 builder.Services.AddScoped<IRequestHandler<StartProjectCommand, Unit>, StartProjectCommandHandler>();
-builder.Services.AddScoped<IRequestHandler<FinishProjectCommand, Unit>, FinishProjectCommandHandler>();
+builder.Services.AddScoped<IRequestHandler<FinishProjectCommand, bool>, FinishProjectCommandHandler>();
 
 //Queries - Projects
 builder.Services.AddScoped<IRequestHandler<GetAllProjectsQuery, List<ProjectViewModel>>, GetAllProjectsQueryHandler>();
@@ -68,6 +71,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 //Services
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();

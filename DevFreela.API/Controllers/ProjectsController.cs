@@ -97,11 +97,18 @@ namespace DevFreela.API.Controllers
         }
 
         // api/projects/1/finish
-        [HttpPut("{id}/finish")]
+        [HttpPut("finish")]
         [Authorize(Roles = "client")]
-        public IActionResult Finish(int id)
+        public async Task<IActionResult> Finish([FromBody] FinishProjectCommand command)
         {
-            _mediator.Send(new FinishProjectCommand(id));
+            await _mediator.Send(new FinishProjectCommand()
+            {
+                CreditCardNumber = command.CreditCardNumber,
+                Cvv = command.Cvv,
+                ExpiresAt = command.ExpiresAt,
+                FullName = command.FullName,
+                Id = command.Id
+            });
 
             return NoContent();
         }
