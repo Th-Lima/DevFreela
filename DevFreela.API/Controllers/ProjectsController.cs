@@ -110,7 +110,7 @@ namespace DevFreela.API.Controllers
                 Id = command.Id
             });
 
-            return NoContent();
+            return Accepted();
         }
     }
 }

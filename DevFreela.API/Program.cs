@@ -26,6 +26,8 @@ using DevFreela.Infrastucture.AuthService;
 using DevFreela.Application.Commands.LoginUser;
 using DevFreela.API.Configuration;
 using DevFreela.Infrastucture.Payments;
+using DevFreela.Infrastucture.MessageBus;
+using DevFreela.Application.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +49,7 @@ builder.Services.AddScoped<IRequestHandler<CreateProjectCommentCommand, Unit>, C
 builder.Services.AddScoped<IRequestHandler<UpdateProjectCommand, Unit>, UpdateProjectCommandHandler>();
 builder.Services.AddScoped<IRequestHandler<DeleteProjectCommand, Unit>, DeleteProjectCommandHandler>();
 builder.Services.AddScoped<IRequestHandler<StartProjectCommand, Unit>, StartProjectCommandHandler>();
-builder.Services.AddScoped<IRequestHandler<FinishProjectCommand, bool>, FinishProjectCommandHandler>();
+builder.Services.AddScoped<IRequestHandler<FinishProjectCommand, Unit>, FinishProjectCommandHandler>();
 
 //Queries - Projects
 builder.Services.AddScoped<IRequestHandler<GetAllProjectsQuery, List<ProjectViewModel>>, GetAllProjectsQueryHandler>();
@@ -81,6 +83,12 @@ builder.Services.AddSwaggerConfiguration();
 
 //JWT
 builder.Services.AddJwtConfiguration(builder.Configuration);
+
+//MessageBus - RabbitMQ
+builder.Services.AddScoped<IMessageBusService, MessageBusService>();
+
+//MessageBus - RabbitMQ - Consumer
+builder.Services.AddHostedService<PaymentApproveConsumer>();
 
 var app = builder.Build();
 
